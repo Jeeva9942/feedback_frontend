@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const { user, isLoading: isLoadingAuth } = useAuth();
   const [selectedDept, setSelectedDept] = useState<Department | 'ALL'>('ALL');
   const [showPrint, setShowPrint] = useState(false);
-  const [printDept, setPrintDept] = useState<Department>('CIVIL');
+  const [printDept, setPrintDept] = useState<Department>('CE');
   const [searchRoll, setSearchRoll] = useState('');
   const printRef = useRef<HTMLDivElement>(null);
 
