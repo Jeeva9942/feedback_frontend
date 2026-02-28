@@ -10,7 +10,7 @@ export interface Student {
 export interface FeedbackAnswer {
   questionId: number;
   section: 'facilities' | 'participation' | 'accomplishment';
-  rating: number; // 1-4 for rating, 1=yes/0=no for participation
+  rating: number;
 }
 
 export interface FeedbackSubmission {
@@ -35,19 +35,47 @@ export interface User {
   hasSubmitted?: boolean;
 }
 
-export type Department = 'CIVIL' | 'MECH' | 'EEE' | 'ECE' | 'CSE' | 'IT' | 'CT' | 'ICE';
+// ── 📌 Core Departments ────────────────────────────────────────────────────
+// CE → ce_feedback   ME → me_feedback   MES → mes_feedback
+// AE → ae_feedback   RAC → rac_feedback  MC → mc_feedback
+// ── ⚡ Circuit Departments ──────────────────────────────────────────────────
+// ECE → ece_feedback  EEE → eee_feedback
+// ── 💻 Other Departments ───────────────────────────────────────────────────
+// CT → ct_feedback   TT → tt_feedback   PT → pt_feedback  CCN → ccn_feedback
 
-export const DEPARTMENTS: Department[] = ['CIVIL', 'MECH', 'EEE', 'ECE', 'CSE', 'IT', 'CT', 'ICE'];
+export type Department =
+  | 'CE'   // Civil Engineering
+  | 'ME'   // Mechanical Engineering
+  | 'MES'  // Mechanical Engineering (Sandwich)
+  | 'AE'   // Automobile Engineering
+  | 'RAC'  // Mechanical Engineering (R & AC)
+  | 'MC'   // Mechatronics
+  | 'ECE'  // Electronics & Communication Engineering
+  | 'EEE'  // Electrical & Electronics Engineering
+  | 'CT'   // Computer Engineering (table: ct_feedback)
+  | 'TT'   // Textile Technology
+  | 'PT'   // Printing Technology
+  | 'CCN'; // Communication & Computer Networking
+
+export const DEPARTMENTS: Department[] = [
+  'CE', 'ME', 'MES', 'AE', 'RAC', 'MC',
+  'ECE', 'EEE',
+  'CT', 'TT', 'PT', 'CCN',
+];
 
 export const DEPARTMENT_NAMES: Record<Department, string> = {
-  CIVIL: 'Civil Engineering',
-  MECH: 'Mechanical Engineering',
-  EEE: 'Electrical & Electronics Engineering',
+  CE: 'Civil Engineering',
+  ME: 'Mechanical Engineering',
+  MES: 'Mechanical Engineering (Sandwich)',
+  AE: 'Automobile Engineering',
+  RAC: 'Mechanical Engineering (R & AC)',
+  MC: 'Mechatronics',
   ECE: 'Electronics & Communication Engineering',
-  CSE: 'Computer Science & Engineering',
-  IT: 'Information Technology',
-  CT: 'Computer Technology',
-  ICE: 'Instrumentation & Control Engineering',
+  EEE: 'Electrical & Electronics Engineering',
+  CT: 'Computer Engineering',
+  TT: 'Textile Technology',
+  PT: 'Printing Technology',
+  CCN: 'Communication & Computer Networking',
 };
 
 export const RATING_LABELS = ['Below Average', 'Average', 'Good', 'Very Good'] as const;

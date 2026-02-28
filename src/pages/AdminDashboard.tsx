@@ -30,6 +30,7 @@ export default function AdminDashboard() {
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [printFeedback, setPrintFeedback] = useState<any[]>([]);
+  const [printDeptStudentCount, setPrintDeptStudentCount] = useState<number>(0);
 
   // Load real data from API
   useEffect(() => {
@@ -57,17 +58,35 @@ export default function AdminDashboard() {
           const deptMap: Record<string, { submitted: number, pending: number }> = {};
           DEPARTMENTS.forEach(d => deptMap[d] = { submitted: 0, pending: 0 });
 
-          // Map to handle full department names to codes
+          // Map full/variant department names from DB → short code
           const deptAliasMap: Record<string, string> = {
-            'COMPUTER TECHNOLOGY': 'CT',
-            'MECHANICAL': 'MECH',
-            'MECHANICAL ENGINEERING': 'MECH',
-            'CIVIL ENGINEERING': 'CIVIL',
-            'ELECTRICAL AND ELECTRONICS': 'EEE',
-            'ELECTRONICS AND COMMUNICATION': 'ECE',
-            'INFORMATION TECHNOLOGY': 'IT',
-            'COMPUTER SCIENCE': 'CSE',
-            'INSTRUMENTATION': 'ICE'
+            // Civil
+            'CIVIL ENGINEERING': 'CE', 'CIVIL': 'CE',
+            // Mechanical
+            'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
+            // Mechanical Sandwich
+            'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
+            // Automobile
+            'AUTOMOBILE ENGINEERING': 'AE', 'AUTOMOBILE': 'AE',
+            // R&AC
+            'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC',
+            // Mechatronics
+            'MECHATRONICS': 'MC', 'MC': 'MC',
+            // ECE
+            'ELECTRONICS AND COMMUNICATION': 'ECE', 'ELECTRONICS & COMMUNICATION ENGINEERING': 'ECE',
+            // EEE
+            'ELECTRICAL AND ELECTRONICS': 'EEE', 'ELECTRICAL & ELECTRONICS ENGINEERING': 'EEE',
+            // Computer Engineering
+            'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT',
+            // Textile
+            'TEXTILE TECHNOLOGY': 'TT', 'TEXTILE': 'TT',
+            // Printing
+            'PRINTING TECHNOLOGY': 'PT', 'PRINTING': 'PT',
+            // CCN
+            'COMMUNICATION AND COMPUTER NETWORKING': 'CCN',
+            'COMMUNICATION & COMPUTER NETWORKING': 'CCN',
+            'COMPUTER COMMUNICATION NETWORKS': 'CCN',
+            'CCN': 'CCN',
           };
 
           data.forEach(s => {
@@ -135,6 +154,28 @@ export default function AdminDashboard() {
   }, [showPrint, printDept, user]);
 
   const handlePrint = (dept: Department) => {
+    // Count enrolled students for this specific department from DB
+    const deptAliasMap: Record<string, string> = {
+      'CIVIL ENGINEERING': 'CE', 'CIVIL': 'CE',
+      'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
+      'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
+      'AUTOMOBILE ENGINEERING': 'AE', 'AUTOMOBILE': 'AE',
+      'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC',
+      'MECHATRONICS': 'MC', 'MC': 'MC',
+      'ELECTRONICS AND COMMUNICATION': 'ECE', 'ELECTRONICS & COMMUNICATION ENGINEERING': 'ECE',
+      'ELECTRICAL AND ELECTRONICS': 'EEE', 'ELECTRICAL & ELECTRONICS ENGINEERING': 'EEE',
+      'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT',
+      'TEXTILE TECHNOLOGY': 'TT', 'TEXTILE': 'TT',
+      'PRINTING TECHNOLOGY': 'PT', 'PRINTING': 'PT',
+      'COMMUNICATION AND COMPUTER NETWORKING': 'CCN',
+      'COMMUNICATION & COMPUTER NETWORKING': 'CCN',
+      'COMPUTER COMMUNICATION NETWORKS': 'CCN', 'CCN': 'CCN',
+    };
+    const count = students.filter(s => {
+      const d = (s.department || '').toUpperCase().trim();
+      return d === dept || deptAliasMap[d] === dept;
+    }).length;
+    setPrintDeptStudentCount(count);
     setPrintDept(dept);
     setShowPrint(true);
     setTimeout(() => window.print(), 500);
@@ -271,7 +312,7 @@ export default function AdminDashboard() {
           <button onClick={() => setShowPrint(false)} className="px-4 py-2 rounded-lg border text-foreground hover:bg-muted">← Back</button>
           <span className="text-sm text-muted-foreground">Press Ctrl+P to save as PDF</span>
         </div>
-        <PrintReport department={printDept} feedback={printFeedback} />
+        <PrintReport department={printDept} feedback={printFeedback} totalStudents={printDeptStudentCount} />
       </div>
     );
   }

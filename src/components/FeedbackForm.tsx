@@ -4,6 +4,7 @@ import { facilityQuestions, participationQuestions, accomplishmentQuestions } fr
 import { FeedbackAnswer, FeedbackSubmission, RATING_LABELS } from '@/types';
 import { CheckCircle } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
+import { getDeptPSO } from '@/data/pso';
 
 interface Props {
   rollNo: string;
@@ -21,9 +22,17 @@ export default function FeedbackForm({ rollNo, studentName, department, onSubmit
   const [generalStrengths, setGeneralStrengths] = useState('');
   const [generalImprovements, setGeneralImprovements] = useState('');
   const [generalAdmin, setGeneralAdmin] = useState('');
-  const [step, setStep] = useState(0); // 0=facilities, 1=participation, 2=accomplishment, 3=text, 4=submitted
+  const [step, setStep] = useState(0);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Build accomplishment questions with department-specific PSO text
+  const pso = getDeptPSO(department);
+  const dynamicAccomplishmentQuestions = accomplishmentQuestions.map(q => {
+    if (q.id === 8) return { ...q, text: `PSO1: ${pso.pso1}` };
+    if (q.id === 9) return { ...q, text: `PSO2: ${pso.pso2}` };
+    return q;
+  });
 
   const validateStep = (): boolean => {
     if (step === 0 && Object.keys(facilityAnswers).length < facilityQuestions.length) {
@@ -220,7 +229,7 @@ export default function FeedbackForm({ rollNo, studentName, department, onSubmit
                   </tr>
                 </thead>
                 <tbody>
-                  {accomplishmentQuestions.map((q, i) => (
+                  {dynamicAccomplishmentQuestions.map((q, i) => (
                     <tr key={q.id} className={i % 2 === 0 ? 'bg-card' : 'bg-muted/30'}>
                       <td className="border p-3 text-center">{q.id}</td>
                       <td className="border p-3 text-sm">{q.text}</td>
