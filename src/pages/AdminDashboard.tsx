@@ -178,7 +178,6 @@ export default function AdminDashboard() {
     setPrintDeptStudentCount(count);
     setPrintDept(dept);
     setShowPrint(true);
-    setTimeout(() => window.print(), 500);
   };
 
   const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
