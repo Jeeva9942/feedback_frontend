@@ -7,6 +7,41 @@ const supabaseAdmin = createClient(
   { auth: { persistSession: false } }
 );
 
+// ─── Department → Feedback Table Name Map ────────────────────────────────
+// Add any department whose table name differs from the default pattern
+// Default pattern: dept.toLowerCase() + '_feedback'  e.g. CT → ct_feedback
+const DEPT_TABLE_MAP = {
+  MC: 'mcs_feedback',   // Mechatronics uses mcs_feedback
+  PT: 'pt_feedback',    // Printing Technology
+  CT: 'ct_feedback',
+  CE: 'ce_feedback',
+  ME: 'me_feedback',
+  MES: 'mes_feedback',
+  AE: 'ae_feedback',
+  RAC: 'rac_feedback',   // Refrigeration & AC (canonical key)
+  'R&AC': 'rac_feedback',   // DB stores 'R&AC' — alias to same table
+  ECE: 'ece_feedback',
+  EEE: 'eee_feedback',
+  TT: 'tt_feedback',
+  CCN: 'ccn_feedback',
+};
+
+/**
+ * Normalize department codes that differ between DB and frontend.
+ * e.g. DB stores 'R&AC' but frontend expects 'RAC'
+ */
+function normalizeDept(dept) {
+  const d = (dept || '').trim();
+  if (d === 'R&AC') return 'RAC';
+  return d;
+}
+
+/** Resolve the feedback table name for a given department code */
+function getFeedbackTable(department) {
+  const key = (department || '').toUpperCase().trim();
+  return DEPT_TABLE_MAP[key] || `${key.toLowerCase()}_feedback`;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────
 function sendJson(res, status, data) {
   res.setHeader("Content-Type", "application/json");
@@ -70,7 +105,8 @@ async function handleLogin(req, res) {
           role: "student",
           rollNo: student.rollno,
           name: student.name,
-          department: student.department || "CT",
+          // Normalize 'R&AC' → 'RAC' so the frontend type system works correctly
+          department: normalizeDept(student.department) || "CT",
           hasSubmitted: alreadySubmitted,
         },
       });
@@ -129,7 +165,7 @@ async function handleSubmitFeedback(req, res) {
   try {
     // 1. Increment question-wise counters
     if (department && Array.isArray(answers)) {
-      const tableName = `${department.toLowerCase()}_feedback`;
+      const tableName = getFeedbackTable(department);
       const now = new Date().toISOString();
 
       for (const ans of answers) {
@@ -143,35 +179,55 @@ async function handleSubmitFeedback(req, res) {
         const ratingCol = { 4: "very_good_4", 3: "good_3", 2: "average_2", 1: "below_average_1" }[ans.rating];
         if (!ratingCol) continue;
 
-        try {
-          // Try RPC first (atomic)
-          const { error: rpcError } = await supabaseAdmin.rpc("increment_question_counter", {
-            t_name: tableName,
-            q_code: code,
-            rating_col: ratingCol,
-          });
-
-          if (rpcError) {
-            // Manual fallback
+        // ── Reliable increment with retry ────────────────────────────────
+        // Read the current row, compute new values, write all back atomically.
+        // total_count is ALWAYS the arithmetic sum of the four rating columns
+        // so it can NEVER drift out of sync (old RPC path didn't update it).
+        let retries = 0;
+        while (retries < 3) {
+          try {
             const { data: row, error: fetchErr } = await supabaseAdmin
               .from(tableName)
-              .select("*")
+              .select("very_good_4, good_3, average_2, below_average_1")
               .eq("question_code", code)
               .single();
 
-            if (!fetchErr && row) {
-              await supabaseAdmin
-                .from(tableName)
-                .update({
-                  total_count: (row.total_count || 0) + 1,
-                  [ratingCol]: (row[ratingCol] || 0) + 1,
-                  updated_at: now,
-                })
-                .eq("question_code", code);
+            if (fetchErr || !row) {
+              console.warn(`[FEEDBACK] Could not fetch row ${code}:`, fetchErr?.message);
+              break;
             }
+
+            const newVG = (row.very_good_4 || 0) + (ratingCol === "very_good_4" ? 1 : 0);
+            const newG = (row.good_3 || 0) + (ratingCol === "good_3" ? 1 : 0);
+            const newAv = (row.average_2 || 0) + (ratingCol === "average_2" ? 1 : 0);
+            const newBA = (row.below_average_1 || 0) + (ratingCol === "below_average_1" ? 1 : 0);
+            // Compute total as real sum — never a separately-tracked counter
+            const newTotal = newVG + newG + newAv + newBA;
+
+            const { error: updateErr } = await supabaseAdmin
+              .from(tableName)
+              .update({
+                very_good_4: newVG,
+                good_3: newG,
+                average_2: newAv,
+                below_average_1: newBA,
+                total_count: newTotal,
+                updated_at: now,
+              })
+              .eq("question_code", code);
+
+            if (updateErr) {
+              console.warn(`[FEEDBACK] Update failed ${code} (attempt ${retries + 1}):`, updateErr.message);
+              retries++;
+              await new Promise((r) => setTimeout(r, 300));
+              continue;
+            }
+            break; // success
+          } catch (err) {
+            console.warn(`[FEEDBACK] Exception for ${code}:`, err.message);
+            retries++;
+            await new Promise((r) => setTimeout(r, 300));
           }
-        } catch (err) {
-          console.warn(`Could not increment counter for ${code}:`, err.message);
         }
       }
     }
@@ -197,7 +253,7 @@ async function handleGetFeedback(req, res, department) {
   try {
     const tableName =
       department && department !== "ALL"
-        ? `${department.toLowerCase()}_feedback`
+        ? getFeedbackTable(department)
         : "ct_feedback";
 
     const { data, error } = await supabaseAdmin.from(tableName).select("*");

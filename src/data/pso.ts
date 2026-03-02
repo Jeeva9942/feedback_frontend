@@ -26,6 +26,11 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso1: 'Design and develop refrigeration and air-conditioning systems using modern technology.',
         pso2: 'Apply acquired knowledge for sustainable industrial and societal development.',
     },
+    // DB alias: some records store 'R&AC' — map to same PSO as RAC
+    'R&AC': {
+        pso1: 'Design and develop refrigeration and air-conditioning systems using modern technology.',
+        pso2: 'Apply acquired knowledge for sustainable industrial and societal development.',
+    },
     MC: {
         pso1: 'Integrate mechanical, electronic, and computing systems to design and develop mechatronic products.',
         pso2: 'Apply mechatronics principles to automate and optimize industrial processes for societal benefit.',

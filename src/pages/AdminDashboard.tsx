@@ -68,8 +68,8 @@ export default function AdminDashboard() {
             'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
             // Automobile
             'AUTOMOBILE ENGINEERING': 'AE', 'AUTOMOBILE': 'AE',
-            // R&AC
-            'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC',
+            // R&AC (two notations used in DB)
+            'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC', 'R&AC': 'RAC',
             // Mechatronics
             'MECHATRONICS': 'MC', 'MC': 'MC',
             // ECE
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
       'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
       'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
       'AUTOMOBILE ENGINEERING': 'AE', 'AUTOMOBILE': 'AE',
-      'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC',
+      'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC', 'R&AC': 'RAC',
       'MECHATRONICS': 'MC', 'MC': 'MC',
       'ELECTRONICS AND COMMUNICATION': 'ECE', 'ELECTRONICS & COMMUNICATION ENGINEERING': 'ECE',
       'ELECTRICAL AND ELECTRONICS': 'EEE', 'ELECTRICAL & ELECTRONICS ENGINEERING': 'EEE',
