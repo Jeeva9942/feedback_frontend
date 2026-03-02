@@ -36,12 +36,12 @@ export const participationQuestions: Question[] = [
   { id: 1, text: 'Did you participate in Sports events?', section: 'participation', type: 'rating' },
   { id: 2, text: 'Did you participate in Seminar?', section: 'participation', type: 'rating' },
   { id: 3, text: 'Did you participate in Workshop?', section: 'participation', type: 'rating' },
-  { id: 4, text: 'Are you did any Industry Project?', section: 'participation', type: 'rating' },
+  { id: 4, text: 'Have you did any Industry Project?', section: 'participation', type: 'rating' },
   { id: 5, text: 'Are you member in Students Guild of Service (SGS)?', section: 'participation', type: 'rating' },
   { id: 6, text: 'Are you a NSS Volunteer?', section: 'participation', type: 'rating' },
   { id: 7, text: 'Have you received any scholarships during the study?', section: 'participation', type: 'rating' },
   { id: 8, text: 'Did you attend any certified courses inside the campus (Swelect, Bosch, 3D Modeling, etc.)?', section: 'participation', type: 'rating' },
-  { id: 9, text: 'Do you attend any awareness program?', section: 'participation', type: 'rating' },
+  { id: 9, text: 'Have you attend any awareness program?', section: 'participation', type: 'rating' },
 ];
 
 export const accomplishmentQuestions: Question[] = [

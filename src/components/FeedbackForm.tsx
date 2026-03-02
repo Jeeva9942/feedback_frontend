@@ -57,6 +57,9 @@ export default function FeedbackForm({ rollNo, studentName, department, onSubmit
 
 
   const handleSubmit = async () => {
+    // Validate that all accomplishment questions are answered before submitting
+    if (!validateStep()) return;
+
     try {
       setIsSubmitting(true);
       setError('');
