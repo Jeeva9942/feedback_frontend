@@ -183,11 +183,12 @@ export default function PrintReport({ department, feedback = [], totalStudents }
         </div>
         <div className="flex justify-between mt-12 text-xs">
           <div className="text-center">
-            <div className="border-t border-black w-40 mb-1" />
+            <p>IQAC Head Signature</p>
+          </div>
+          <div className="text-center">
             <p>HOD Signature</p>
           </div>
           <div className="text-center">
-            <div className="border-t border-black w-40 mb-1" />
             <p>Principal Signature</p>
           </div>
         </div>
