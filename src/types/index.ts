@@ -37,7 +37,7 @@ export interface User {
 
 // ── 📌 Core Departments ────────────────────────────────────────────────────
 // CE → ce_feedback   ME → me_feedback   MES → mes_feedback
-// AE → ae_feedback   RAC → rac_feedback  MC → mc_feedback
+// AE → ae_feedback   RAC → rac_feedback  MC → mcs_feedback
 // ── ⚡ Circuit Departments ──────────────────────────────────────────────────
 // ECE → ece_feedback  EEE → eee_feedback
 // ── 💻 Other Departments ───────────────────────────────────────────────────

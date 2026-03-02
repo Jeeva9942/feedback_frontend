@@ -138,7 +138,8 @@ async function handleGetStudents(res) {
       const mapped = (data || []).map((s) => ({
         rollNo: s.rollno,
         name: s.name,
-        department: s.department,
+        // Normalize 'R&AC' → 'RAC' so admin filters and charts work correctly
+        department: normalizeDept(s.department),
         hasSubmitted: s.status,
       }));
 
