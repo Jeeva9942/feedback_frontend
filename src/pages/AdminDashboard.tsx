@@ -148,11 +148,14 @@ export default function AdminDashboard() {
       apiFetch(`/api/feedback/${printDept}`)
         .then(res => res.json())
         .then(f => {
+          // Robust check: API must return an array. 
+          // If it returns { error: "..." }, fall back to empty array and warn.
           if (Array.isArray(f)) {
             setPrintFeedback(f);
           } else {
             console.error('Expected array for feedback but got:', f);
             setPrintFeedback([]);
+            alert(`Report data for ${printDept} is not available (Table missing or Server Error).`);
           }
         })
         .catch(err => {

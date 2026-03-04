@@ -11,22 +11,23 @@ const supabaseAdmin = createClient(
 // Add any department whose table name differs from the default pattern
 // Default pattern: dept.toLowerCase() + '_feedback'  e.g. CT → ct_feedback
 const DEPT_TABLE_MAP = {
-  MC: 'mcs_feedback',          // Mechatronics
+  MC: 'mcs_feedback',           // Mechatronics
   MCS: 'mcs_feedback',
-  PT: 'pt_feedback',           // Printing Technology
-  MECH_AIDED: 'mech_aided_feedback',   // Mechanical Engineering – Aided
-  MECH_SF: 'mechanical_sf_feedback',// Mechanical Engineering – Self-Finance
+  PT: 'pt_feedback',            // Printing Technology
+  MECH_AIDED: 'mech_aided_feedback',    // Mechanical Aided
+  MECH_SF: 'mechanical_sf_feedback', // Mechanical SF
   CT: 'ct_feedback',
   CE: 'ce_feedback',
+  RAC: 'rac_feedback',
+  'R&AC': 'rac_feedback',
+  TT: 'tt_feedback',
+  CCN: 'ccn_feedback',
+  // Below departments are mapped but confirmed missing in Supabase schema snippet
   ME: 'me_feedback',
   MES: 'mes_feedback',
   AE: 'ae_feedback',
-  RAC: 'rac_feedback',
-  'R&AC': 'rac_feedback',          // DB alias for RAC
   ECE: 'ece_feedback',
   EEE: 'eee_feedback',
-  TT: 'tt_feedback',
-  CCN: 'ccn_feedback',
 };
 
 /**
@@ -263,20 +264,20 @@ async function handleGetFeedback(req, res, department) {
     const { data, error } = await supabaseAdmin.from(tableName).select("*");
 
     if (error) {
+      // 42P01: Relation/Table does not exist
       if (error.code === "42P01") {
-        console.warn(`[FEEDBACK] Table "${tableName}" not found. Ensure it is created in Supabase.`);
-        return sendJson(res, 200, []); // Return empty array to keep UI clean
+        console.warn(`[API] Table "${tableName}" requested for ${department} NOT FOUND in database.`);
+        return sendJson(res, 200, []); // Return empty array to prevent frontend crash
       }
-      console.error(`[FEEDBACK ERROR] ${tableName} | ${error.code}: ${error.message}`);
-      // Return 200 with empty array but log error, or 500 with empty array
-      // Using 200 + [] here to prevent frontend "Expected array" errors and show 0s instead of crashing
-      return sendJson(res, 200, []);
+
+      console.error(`[API ERROR] ${tableName} | ${error.code}: ${error.message}`);
+      return sendJson(res, 200, []); // Still return empty array but log the error
     }
 
     return sendJson(res, 200, Array.isArray(data) ? data : []);
   } catch (err) {
-    console.error(`[FEEDBACK EXCEPTION] ${tableName} |`, err.message);
-    return sendJson(res, 200, []); // Fallback to empty array
+    console.error(`[API EXCEPTION] ${tableName} |`, err.message);
+    return sendJson(res, 200, []);
   }
 }
 
