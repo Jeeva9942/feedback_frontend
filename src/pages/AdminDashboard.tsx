@@ -64,6 +64,10 @@ export default function AdminDashboard() {
             'CIVIL ENGINEERING': 'CE', 'CIVIL': 'CE',
             // Mechanical
             'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
+            // Mechanical Aided (DB stores 'MECH_AIDED')
+            'MECH_AIDED': 'MECH_AIDED', 'MECHANICAL ENGINEERING (AIDED)': 'MECH_AIDED',
+            // Mechanical SF (DB stores 'MECH_SF')
+            'MECH_SF': 'MECH_SF', 'MECHANICAL ENGINEERING (SF)': 'MECH_SF',
             // Mechanical Sandwich
             'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
             // Automobile
@@ -158,6 +162,8 @@ export default function AdminDashboard() {
     const deptAliasMap: Record<string, string> = {
       'CIVIL ENGINEERING': 'CE', 'CIVIL': 'CE',
       'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
+      'MECH_AIDED': 'MECH_AIDED', 'MECHANICAL ENGINEERING (AIDED)': 'MECH_AIDED',
+      'MECH_SF': 'MECH_SF', 'MECHANICAL ENGINEERING (SF)': 'MECH_SF',
       'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
       'AUTOMOBILE ENGINEERING': 'AE', 'AUTOMOBILE': 'AE',
       'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC', 'R&AC': 'RAC',
@@ -186,11 +192,22 @@ export default function AdminDashboard() {
     alert('Excel upload requires Lovable Cloud backend. Currently running without backend support.');
   };
 
+  // Normalize raw DB department codes so the frontend is always consistent
+  // (e.g. DB stores 'R&AC' but the Department type uses 'RAC')
+  const normalizeDept = (dept: string) => {
+    if (!dept) return dept;
+    const d = dept.trim();
+    if (d === 'R&AC') return 'RAC';
+    return d;
+  };
+
   // Rule of Hooks: All hooks and logic must come before early returns
   const filteredStudents = students.filter(s => {
     const sName = s.name || '';
     const sRoll = s.rollNo || '';
-    const matchDept = selectedDept === 'ALL' || s.department === selectedDept;
+    // Normalize dept so 'R&AC' and 'RAC' are treated as the same
+    const sDept = normalizeDept(s.department || '');
+    const matchDept = selectedDept === 'ALL' || sDept === selectedDept;
     const matchSearch = !searchRoll ||
       sRoll.toLowerCase().includes(searchRoll.toLowerCase()) ||
       sName.toLowerCase().includes(searchRoll.toLowerCase());
@@ -442,7 +459,7 @@ export default function AdminDashboard() {
                   <tr key={s.rollNo} className={i % 2 === 0 ? 'bg-card' : 'bg-muted/30'}>
                     <td className="p-3 font-medium text-foreground">{s.rollNo}</td>
                     <td className="p-3 text-foreground">{s.name}</td>
-                    <td className="p-3 text-foreground">{s.department}</td>
+                    <td className="p-3 text-foreground">{normalizeDept(s.department || '')}</td>
                     <td className="p-3 text-center">
                       {s.hasSubmitted ? (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-success/10 text-success">

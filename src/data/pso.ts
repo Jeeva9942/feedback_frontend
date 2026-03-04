@@ -14,6 +14,16 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso1: 'Design and develop mechanical products using modern CAD/CAM and quality control tools.',
         pso2: 'Demonstrate functional competencies aligned with industrial practices.',
     },
+    // Mechanical Aided section
+    MECH_AIDED: {
+        pso1: 'Design and develop mechanical products using modern CAD/CAM and quality control tools.',
+        pso2: 'Demonstrate functional competencies aligned with industrial practices.',
+    },
+    // Mechanical Self-Finance section
+    MECH_SF: {
+        pso1: 'Design and develop mechanical products using modern CAD/CAM and quality control tools.',
+        pso2: 'Demonstrate functional competencies aligned with industrial practices.',
+    },
     MES: {
         pso1: 'Design and develop mechanical products through experiential industrial learning.',
         pso2: 'Apply technical skills gained through industry exposure to solve engineering problems.',
@@ -32,8 +42,8 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso2: 'Apply acquired knowledge for sustainable industrial and societal development.',
     },
     MC: {
-        pso1: 'Integrate mechanical, electronic, and computing systems to design and develop mechatronic products.',
-        pso2: 'Apply mechatronics principles to automate and optimize industrial processes for societal benefit.',
+        pso1: 'Develop Mechatronics systems and components as per the national and international standards, Process and system.',
+        pso2: 'Solve industry problems using appropriate modern tools, techniques and devices to provide solutions.',
     },
 
     // ⚡ Circuit Departments

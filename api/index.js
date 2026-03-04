@@ -11,15 +11,17 @@ const supabaseAdmin = createClient(
 // Add any department whose table name differs from the default pattern
 // Default pattern: dept.toLowerCase() + '_feedback'  e.g. CT → ct_feedback
 const DEPT_TABLE_MAP = {
-  MC: 'mcs_feedback',   // Mechatronics uses mcs_feedback
-  PT: 'pt_feedback',    // Printing Technology
+  MC: 'mcs_feedback',          // Mechatronics
+  PT: 'pt_feedback',           // Printing Technology
+  MECH_AIDED: 'mech_aided_feedback',   // Mechanical Engineering – Aided
+  MECH_SF: 'mechanical_sf_feedback',// Mechanical Engineering – Self-Finance
   CT: 'ct_feedback',
   CE: 'ce_feedback',
   ME: 'me_feedback',
   MES: 'mes_feedback',
   AE: 'ae_feedback',
-  RAC: 'rac_feedback',   // Refrigeration & AC (canonical key)
-  'R&AC': 'rac_feedback',   // DB stores 'R&AC' — alias to same table
+  RAC: 'rac_feedback',
+  'R&AC': 'rac_feedback',          // DB alias for RAC
   ECE: 'ece_feedback',
   EEE: 'eee_feedback',
   TT: 'tt_feedback',
@@ -249,21 +251,37 @@ async function handleSubmitFeedback(req, res) {
   }
 }
 
-// ─── Route: GET /api/feedback/:department ────────────────────────────────
+// ─── Route: GET /api/feedback/:department ──────────────────────────────────
 async function handleGetFeedback(req, res, department) {
+  const tableName =
+    department && department !== "ALL"
+      ? getFeedbackTable(department)
+      : "ct_feedback";
+
   try {
-    const tableName =
-      department && department !== "ALL"
-        ? getFeedbackTable(department)
-        : "ct_feedback";
-
     const { data, error } = await supabaseAdmin.from(tableName).select("*");
-    if (error) throw new Error(error.message);
 
-    return sendJson(res, 200, data || []);
+    if (error) {
+      // 42P01 = table does not exist yet — return empty array gracefully
+      if (error.code === "42P01") {
+        console.warn(`[FEEDBACK] Table "${tableName}" not found in Supabase. Run CREATE TABLE first.`);
+        return sendJson(res, 200, []);
+      }
+      // Any other DB error — expose real message for diagnosis
+      console.error(`[FEEDBACK ERROR] ${tableName} | ${error.code}: ${error.message}`);
+      return sendJson(res, 500, {
+        error: `Database error querying ${tableName}`,
+        detail: error.message,
+        code: error.code,
+        data: [],
+      });
+    }
+
+    // Always return an array — never a plain object
+    return sendJson(res, 200, Array.isArray(data) ? data : []);
   } catch (err) {
-    console.error("[GET FEEDBACK ERROR]:", err.message);
-    return sendJson(res, 500, { error: "Failed to load feedback" });
+    console.error(`[FEEDBACK EXCEPTION] ${tableName} |`, err.message);
+    return sendJson(res, 500, { error: err.message, data: [] });
   }
 }
 
