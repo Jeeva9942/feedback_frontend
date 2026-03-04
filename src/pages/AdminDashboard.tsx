@@ -75,17 +75,22 @@ export default function AdminDashboard() {
             // R&AC (two notations used in DB)
             'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC', 'R&AC': 'RAC',
             // Mechatronics
-            'MECHATRONICS': 'MC', 'MC': 'MC',
+            'MECHATRONICS': 'MC', 'MC': 'MC', 'MCS': 'MC',
             // ECE
             'ELECTRONICS AND COMMUNICATION': 'ECE', 'ELECTRONICS & COMMUNICATION ENGINEERING': 'ECE',
+            'ECE': 'ECE',
             // EEE
             'ELECTRICAL AND ELECTRONICS': 'EEE', 'ELECTRICAL & ELECTRONICS ENGINEERING': 'EEE',
+            'EEE': 'EEE',
             // Computer Engineering
             'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT',
+            'CT': 'CT',
             // Textile
             'TEXTILE TECHNOLOGY': 'TT', 'TEXTILE': 'TT',
+            'TT': 'TT',
             // Printing
             'PRINTING TECHNOLOGY': 'PT', 'PRINTING': 'PT',
+            'PT': 'PT',
             // CCN
             'COMMUNICATION AND COMPUTER NETWORKING': 'CCN',
             'COMMUNICATION & COMPUTER NETWORKING': 'CCN',
@@ -167,7 +172,7 @@ export default function AdminDashboard() {
       'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
       'AUTOMOBILE ENGINEERING': 'AE', 'AUTOMOBILE': 'AE',
       'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC', 'R&AC': 'RAC',
-      'MECHATRONICS': 'MC', 'MC': 'MC',
+      'MECHATRONICS': 'MC', 'MC': 'MC', 'MCS': 'MC',
       'ELECTRONICS AND COMMUNICATION': 'ECE', 'ELECTRONICS & COMMUNICATION ENGINEERING': 'ECE',
       'ELECTRICAL AND ELECTRONICS': 'EEE', 'ELECTRICAL & ELECTRONICS ENGINEERING': 'EEE',
       'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT',
@@ -193,12 +198,26 @@ export default function AdminDashboard() {
   };
 
   // Normalize raw DB department codes so the frontend is always consistent
-  // (e.g. DB stores 'R&AC' but the Department type uses 'RAC')
+  // (e.g. DB stores 'MECHATRONICS' or 'R&AC' but we use 'MC' or 'RAC')
   const normalizeDept = (dept: string) => {
-    if (!dept) return dept;
-    const d = dept.trim();
-    if (d === 'R&AC') return 'RAC';
-    return d;
+    if (!dept) return '';
+    const d = dept.toUpperCase().trim();
+
+    // Use a simplified local version of the alias map for quick lookups
+    const quickMap: Record<string, string> = {
+      'CIVIL ENGINEERING': 'CE', 'CIVIL': 'CE',
+      'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
+      'MECHANICAL ENGINEERING (AIDED)': 'MECH_AIDED', 'MECH_AIDED': 'MECH_AIDED',
+      'MECHANICAL ENGINEERING (SF)': 'MECH_SF', 'MECH_SF': 'MECH_SF',
+      'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
+      'AUTOMOBILE ENGINEERING': 'AE', 'AUTOMOBILE': 'AE',
+      'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'R&AC': 'RAC',
+      'MECHATRONICS': 'MC', 'MCS': 'MC',
+      'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT',
+      'PRINTING TECHNOLOGY': 'PT', 'PRINTING': 'PT',
+    };
+
+    return quickMap[d] || d;
   };
 
   // Rule of Hooks: All hooks and logic must come before early returns
