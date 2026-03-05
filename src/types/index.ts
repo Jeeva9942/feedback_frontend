@@ -51,18 +51,25 @@ export type Department =
   | 'MECH_SF'     // Mechanical Engineering – Self-Finance (table: mechanical_sf_feedback)
   | 'MES'         // Mechanical Engineering (Sandwich)
   | 'AE'          // Automobile Engineering
+  | 'AUTO_AIDED'   // Automobile Engineering - Aided (table: automobile_aided_feedback)
+  | 'AUTO_SF'      // Automobile Engineering - SF (table: automobile_sf_feedback)
   | 'RAC'         // Mechanical Engineering (R & AC)
   | 'MC'          // Mechatronics (table: mcs_feedback)
   | 'ECE'         // Electronics & Communication Engineering
+  | 'ECE_AIDED'   // Electronics & Communication Engineering (Aided)
+  | 'ECE_SF'      // Electronics & Communication Engineering (SF)
   | 'EEE'         // Electrical & Electronics Engineering
+  | 'EEE_AIDED'   // Electrical & Electronics Engineering (Aided)
+  | 'EEE_SF'      // Electrical & Electronics Engineering (SF)
   | 'CT'          // Computer Engineering (table: ct_feedback)
   | 'TT'          // Textile Technology
   | 'PT'          // Printing Technology
   | 'CCN';        // Communication & Computer Networking
 
 export const DEPARTMENTS: Department[] = [
-  'CE', 'MECH_AIDED', 'MECH_SF', 'ME', 'MES', 'AE', 'RAC', 'MC',
-  'ECE', 'EEE',
+  'CE', 'MECH_AIDED', 'MECH_SF', 'ME', 'MES', 'AE', 'AUTO_AIDED', 'AUTO_SF', 'RAC', 'MC',
+  'ECE', 'ECE_AIDED', 'ECE_SF',
+  'EEE', 'EEE_AIDED', 'EEE_SF',
   'CT', 'TT', 'PT', 'CCN',
 ];
 
@@ -73,10 +80,16 @@ export const DEPARTMENT_NAMES: Record<Department, string> = {
   MECH_SF: 'Mechanical Engineering (SF)',
   MES: 'Mechanical Engineering (Sandwich)',
   AE: 'Automobile Engineering',
+  AUTO_AIDED: 'Automobile Engineering (Aided)',
+  AUTO_SF: 'Automobile Engineering (SF)',
   RAC: 'Mechanical Engineering (R & AC)',
   MC: 'Mechatronics',
   ECE: 'Electronics & Communication Engineering',
+  ECE_AIDED: 'Electronics & Communication Engineering (Aided)',
+  ECE_SF: 'Electronics & Communication Engineering (SF)',
   EEE: 'Electrical & Electronics Engineering',
+  EEE_AIDED: 'Electrical & Electronics Engineering (Aided)',
+  EEE_SF: 'Electrical & Electronics Engineering (SF)',
   CT: 'Computer Engineering',
   TT: 'Textile Technology',
   PT: 'Printing Technology',

@@ -32,6 +32,14 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso1: 'Apply the core knowledge and technological advances in automotive industries.',
         pso2: 'Demonstrate proficiency in the use of automobile shop tools and equipment to diagnose and repair vehicle systems.',
     },
+    AUTO_AIDED: {
+        pso1: 'Apply the core knowledge and technological advances in automotive industries.',
+        pso2: 'Demonstrate proficiency in the use of automobile shop tools and equipment to diagnose and repair vehicle systems.',
+    },
+    AUTO_SF: {
+        pso1: 'Apply the core knowledge and technological advances in automotive industries.',
+        pso2: 'Demonstrate proficiency in the use of automobile shop tools and equipment to diagnose and repair vehicle systems.',
+    },
     RAC: {
         pso1: 'Design and develop refrigeration and air-conditioning systems using modern technology.',
         pso2: 'Apply acquired knowledge for sustainable industrial and societal development.',
@@ -51,7 +59,23 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso1: 'Design and develop electronic and communication systems using modern engineering tools.',
         pso2: 'Apply electronics and communication knowledge for industrial and societal development.',
     },
+    ECE_AIDED: {
+        pso1: 'Design and develop electronic and communication systems using modern engineering tools.',
+        pso2: 'Apply electronics and communication knowledge for industrial and societal development.',
+    },
+    ECE_SF: {
+        pso1: 'Design and develop electronic and communication systems using modern engineering tools.',
+        pso2: 'Apply electronics and communication knowledge for industrial and societal development.',
+    },
     EEE: {
+        pso1: 'Design and develop electrical systems and apply power electronics for industrial applications.',
+        pso2: 'Demonstrate competency in electrical installation, maintenance, and energy management.',
+    },
+    EEE_AIDED: {
+        pso1: 'Design and develop electrical systems and apply power electronics for industrial applications.',
+        pso2: 'Demonstrate competency in electrical installation, maintenance, and energy management.',
+    },
+    EEE_SF: {
         pso1: 'Design and develop electrical systems and apply power electronics for industrial applications.',
         pso2: 'Demonstrate competency in electrical installation, maintenance, and energy management.',
     },
