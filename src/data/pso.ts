@@ -19,10 +19,14 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso1: 'Design and develop mechanical products using modern CAD/CAM and quality control tools.',
         pso2: 'Demonstrate functional competencies aligned with industrial practices.',
     },
-    // Mechanical Self-Finance section
+    // Mechanical SF section
     MECH_SF: {
         pso1: 'Design and develop mechanical products using modern CAD/CAM and quality control tools.',
         pso2: 'Demonstrate functional competencies aligned with industrial practices.',
+    },
+    MC: {
+        pso1: 'Develop Mechatronics systems and components as per the national and international standards, Process and system.',
+        pso2: 'Solve industry problems using appropriate modern tools, techniques and devices to provide solutions.',
     },
     MES: {
         pso1: 'Design and develop mechanical products through experiential industrial learning.',
@@ -44,16 +48,6 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso1: 'Design and develop refrigeration and air-conditioning systems using modern technology.',
         pso2: 'Apply acquired knowledge for sustainable industrial and societal development.',
     },
-    // DB alias: some records store 'R&AC' — map to same PSO as RAC
-    'R&AC': {
-        pso1: 'Design and develop refrigeration and air-conditioning systems using modern technology.',
-        pso2: 'Apply acquired knowledge for sustainable industrial and societal development.',
-    },
-    MC: {
-        pso1: 'Develop Mechatronics systems and components as per the national and international standards, Process and system.',
-        pso2: 'Solve industry problems using appropriate modern tools, techniques and devices to provide solutions.',
-    },
-
     // ⚡ Circuit Departments
     ECE: {
         pso1: 'Design and develop electronic and communication systems using modern engineering tools.',

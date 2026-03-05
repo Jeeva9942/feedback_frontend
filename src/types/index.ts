@@ -45,55 +45,56 @@ export interface User {
 // CT → ct_feedback   TT → tt_feedback   PT → pt_feedback  CCN → ccn_feedback
 
 export type Department =
-  | 'CE'          // Civil Engineering
-  | 'ME'          // Mechanical Engineering (alias — not used directly)
-  | 'MECH_AIDED'  // Mechanical Engineering – Aided  (table: mech_aided_feedback)
-  | 'MECH_SF'     // Mechanical Engineering – Self-Finance (table: mechanical_sf_feedback)
-  | 'MES'         // Mechanical Engineering (Sandwich)
-  | 'AE'          // Automobile Engineering
-  | 'AUTO_AIDED'   // Automobile Engineering - Aided (table: automobile_aided_feedback)
-  | 'AUTO_SF'      // Automobile Engineering - SF (table: automobile_sf_feedback)
-  | 'RAC'         // Mechanical Engineering (R & AC)
-  | 'MC'          // Mechatronics (table: mcs_feedback)
-  | 'ECE'         // Electronics & Communication Engineering
-  | 'ECE_AIDED'   // Electronics & Communication Engineering (Aided)
-  | 'ECE_SF'      // Electronics & Communication Engineering (SF)
-  | 'EEE'         // Electrical & Electronics Engineering
-  | 'EEE_AIDED'   // Electrical & Electronics Engineering (Aided)
-  | 'EEE_SF'      // Electrical & Electronics Engineering (SF)
-  | 'CT'          // Computer Engineering (table: ct_feedback)
-  | 'TT'          // Textile Technology
-  | 'PT'          // Printing Technology
-  | 'CCN';        // Communication & Computer Networking
+  | 'CE'          // Civil Engineering (Aided)
+  | 'MECH_AIDED'  // Mechanical Engineering (Aided)
+  | 'MECH_SF'     // Mechanical Engineering (SF)
+  | 'MC'          // Mechatronics (SF)
+  | 'MES'         // Mechanical Sandwich (SF)
+  | 'EEE_AIDED'   // Electrical and Electronics Engineering (Aided)
+  | 'EEE_SF'      // Electrical and Electronics Engineering (SF)
+  | 'ECE_AIDED'   // Electronics and Communication Engineering (Aided)
+  | 'ECE_SF'      // Electronics and Communication Engineering (SF)
+  | 'AUTO_AIDED'  // Automobile Engineering (Aided)
+  | 'AUTO_SF'     // Automobile Engineering (SF)
+  | 'RAC'         // Mechanical Engineering (R&AC) (Aided)
+  | 'TT'          // Textile Technology (Aided)
+  | 'CT'          // Computer Engineering (Aided)
+  | 'CCN'         // Communication & Computer Networking (SF)
+  | 'PT'          // Printing Technology (SF)
+  | 'ME'          // Alias
+  | 'AE'          // Alias
+  | 'ECE'         // Alias
+  | 'EEE';        // Alias
 
 export const DEPARTMENTS: Department[] = [
-  'CE', 'MECH_AIDED', 'MECH_SF', 'ME', 'MES', 'AE', 'AUTO_AIDED', 'AUTO_SF', 'RAC', 'MC',
-  'ECE', 'ECE_AIDED', 'ECE_SF',
-  'EEE', 'EEE_AIDED', 'EEE_SF',
-  'CT', 'TT', 'PT', 'CCN',
+  'MECH_AIDED', 'MECH_SF', 'MC', 'MES',
+  'EEE_AIDED', 'EEE_SF', 'ECE_AIDED', 'ECE_SF',
+  'AUTO_AIDED', 'AUTO_SF', 'RAC',
+  'CE', 'TT', 'CT', 'CCN', 'PT'
 ];
 
 export const DEPARTMENT_NAMES: Record<Department, string> = {
-  CE: 'Civil Engineering',
-  ME: 'Mechanical Engineering',
+  CE: 'Civil Engineering (Aided)',
   MECH_AIDED: 'Mechanical Engineering (Aided)',
   MECH_SF: 'Mechanical Engineering (SF)',
-  MES: 'Mechanical Engineering (Sandwich)',
-  AE: 'Automobile Engineering',
+  MC: 'Mechatronics (SF)',
+  MES: 'Mechanical Sandwich (SF)',
+  EEE_AIDED: 'Electrical and Electronics Engineering (Aided)',
+  EEE_SF: 'Electrical and Electronics Engineering (SF)',
+  ECE_AIDED: 'Electronics and Communication Engineering (Aided)',
+  ECE_SF: 'Electronics and Communication Engineering (SF)',
   AUTO_AIDED: 'Automobile Engineering (Aided)',
   AUTO_SF: 'Automobile Engineering (SF)',
-  RAC: 'Mechanical Engineering (R & AC)',
-  MC: 'Mechatronics',
-  ECE: 'Electronics & Communication Engineering',
-  ECE_AIDED: 'Electronics & Communication Engineering (Aided)',
-  ECE_SF: 'Electronics & Communication Engineering (SF)',
-  EEE: 'Electrical & Electronics Engineering',
-  EEE_AIDED: 'Electrical & Electronics Engineering (Aided)',
-  EEE_SF: 'Electrical & Electronics Engineering (SF)',
-  CT: 'Computer Engineering',
-  TT: 'Textile Technology',
-  PT: 'Printing Technology',
-  CCN: 'Communication & Computer Networking',
+  RAC: 'Mechanical Engineering (R&AC) (Aided)',
+  TT: 'Textile Technology (Aided)',
+  CT: 'Computer Engineering (Aided)',
+  CCN: 'Communication & Computer Networking (SF)',
+  PT: 'Printing Technology (SF)',
+  // Aliases for historical data mapping
+  ME: 'Mechanical Engineering',
+  AE: 'Automobile Engineering',
+  ECE: 'Electronics and Communication',
+  EEE: 'Electrical and Electronics',
 };
 
 export const RATING_LABELS = ['Below Average', 'Average', 'Good', 'Very Good'] as const;
