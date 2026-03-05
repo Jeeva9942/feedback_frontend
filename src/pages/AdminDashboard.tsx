@@ -58,45 +58,14 @@ export default function AdminDashboard() {
           const deptMap: Record<string, { submitted: number, pending: number }> = {};
           DEPARTMENTS.forEach(d => deptMap[d] = { submitted: 0, pending: 0 });
 
-          // Map full/variant department names from DB → short code
-          const deptAliasMap: Record<string, string> = {
-            // Civil
-            'CIVIL ENGINEERING': 'CE', 'CIVIL': 'CE',
-            // Mechanical
-            'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
-            'MECHANICAL ENGINEERING (AIDED)': 'MECH_AIDED', 'MECH_AIDED': 'MECH_AIDED',
-            'MECHANICAL ENGINEERING (SF)': 'MECH_SF', 'MECH_SF': 'MECH_SF',
-            'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
-            // Automobile
-            'AUTOMOBILE ENGINEERING': 'AUTO_AIDED', 'AUTOMOBILE': 'AUTO_AIDED',
-            'AE': 'AUTO_AIDED', 'AUTO_AIDED': 'AUTO_AIDED', 'AUTO_SF': 'AUTO_SF',
-            // R&AC
-            'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC', 'R&AC': 'RAC',
-            // Mechatronics
-            'MECHATRONICS': 'MC', 'MC': 'MC', 'MCS': 'MC',
-            // ECE
-            'ELECTRONICS AND COMMUNICATION': 'ECE_AIDED', 'ELECTRONICS & COMMUNICATION ENGINEERING': 'ECE_AIDED',
-            'ECE': 'ECE_AIDED', 'ECE_AIDED': 'ECE_AIDED', 'ECE_SF': 'ECE_SF',
-            // EEE
-            'ELECTRICAL AND ELECTRONICS': 'EEE_AIDED', 'ELECTRICAL & ELECTRONICS ENGINEERING': 'EEE_AIDED',
-            'EEE': 'EEE_AIDED', 'EEE_AIDED': 'EEE_AIDED', 'EEE_SF': 'EEE_SF',
-            // Other
-            'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT', 'CT': 'CT',
-            'TEXTILE TECHNOLOGY': 'TT', 'TEXTILE': 'TT', 'TT': 'TT',
-            'PRINTING TECHNOLOGY': 'PT', 'PRINTING': 'PT', 'PT': 'PT',
-            'COMMUNICATION AND COMPUTER NETWORKING': 'CCN', 'CCN': 'CCN',
-          };
-
           data.forEach(s => {
-            let dept = (s.department || '').toUpperCase().trim();
-            // Check for alias
-            if (deptAliasMap[dept]) dept = deptAliasMap[dept];
+            const dept = normalizeDept(s.department);
 
             if (deptMap[dept as Department]) {
               if (s.hasSubmitted) deptMap[dept as Department].submitted++;
               else deptMap[dept as Department].pending++;
-            } else {
-              // Default to CT if unclear or other mapping failed
+            } else if (dept !== '') {
+              // Only default to CT if they have a non-empty department that we don't recognize
               if (s.hasSubmitted) deptMap['CT'].submitted++;
               else deptMap['CT'].pending++;
             }
@@ -133,18 +102,20 @@ export default function AdminDashboard() {
   }, [user, isLoadingAuth]);
 
   useEffect(() => {
-    if (showPrint && user?.role === 'admin') {
-      apiFetch(`/api/feedback/${printDept}`)
+    if (showPrint && printDept && user) {
+      // CRITICAL: Clear previous data so we don't show stale results 
+      // from the last department while loading new ones.
+      setPrintFeedback([]);
+
+      apiFetch('/api/feedback/' + printDept)
         .then(res => res.json())
         .then(f => {
-          // Robust check: API must return an array. 
-          // If it returns { error: "..." }, fall back to empty array and warn.
           if (Array.isArray(f)) {
             setPrintFeedback(f);
           } else {
             console.error('Expected array for feedback but got:', f);
             setPrintFeedback([]);
-            alert(`Report data for ${printDept} is not available (Table missing or Server Error).`);
+            alert(`Report data for ${printDept} is not available (Check if ${printDept} table exists).`);
           }
         })
         .catch(err => {
@@ -156,29 +127,7 @@ export default function AdminDashboard() {
 
   const handlePrint = (dept: Department) => {
     // Count enrolled students for this specific department from DB
-    const deptAliasMap: Record<string, string> = {
-      'CIVIL ENGINEERING': 'CE', 'CIVIL': 'CE',
-      'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
-      'MECHANICAL ENGINEERING (AIDED)': 'MECH_AIDED', 'MECH_AIDED': 'MECH_AIDED',
-      'MECHANICAL ENGINEERING (SF)': 'MECH_SF', 'MECH_SF': 'MECH_SF',
-      'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
-      'AUTOMOBILE ENGINEERING': 'AUTO_AIDED', 'AUTOMOBILE': 'AUTO_AIDED',
-      'AE': 'AUTO_AIDED', 'AUTO_AIDED': 'AUTO_AIDED', 'AUTO_SF': 'AUTO_SF',
-      'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'RAC': 'RAC', 'R&AC': 'RAC',
-      'MECHATRONICS': 'MC', 'MC': 'MC', 'MCS': 'MC',
-      'ELECTRONICS AND COMMUNICATION': 'ECE_AIDED', 'ELECTRONICS & COMMUNICATION ENGINEERING': 'ECE_AIDED',
-      'ECE': 'ECE_AIDED', 'ECE_AIDED': 'ECE_AIDED', 'ECE_SF': 'ECE_SF',
-      'ELECTRICAL AND ELECTRONICS': 'EEE_AIDED', 'ELECTRICAL & ELECTRONICS ENGINEERING': 'EEE_AIDED',
-      'EEE': 'EEE_AIDED', 'EEE_AIDED': 'EEE_AIDED', 'EEE_SF': 'EEE_SF',
-      'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT', 'CT': 'CT',
-      'TEXTILE TECHNOLOGY': 'TT', 'TEXTILE': 'TT', 'TT': 'TT',
-      'PRINTING TECHNOLOGY': 'PT', 'PRINTING': 'PT', 'PT': 'PT',
-      'COMMUNICATION AND COMPUTER NETWORKING': 'CCN', 'CCN': 'CCN',
-    };
-    const count = students.filter(s => {
-      const d = (s.department || '').toUpperCase().trim();
-      return d === dept || deptAliasMap[d] === dept;
-    }).length;
+    const count = students.filter(s => normalizeDept(s.department) === dept).length;
     setPrintDeptStudentCount(count);
     setPrintDept(dept);
     setShowPrint(true);
@@ -196,23 +145,33 @@ export default function AdminDashboard() {
     if (!dept) return '';
     const d = dept.toUpperCase().trim();
 
-    // Use a simplified local version of the alias map for quick lookups
-    const quickMap: Record<string, string> = {
+    const map: Record<string, string> = {
+      // Civil
       'CIVIL ENGINEERING': 'CE', 'CIVIL': 'CE',
+      // Mechanical
       'MECHANICAL ENGINEERING': 'ME', 'MECHANICAL': 'ME',
       'MECHANICAL ENGINEERING (AIDED)': 'MECH_AIDED', 'MECH_AIDED': 'MECH_AIDED',
       'MECHANICAL ENGINEERING (SF)': 'MECH_SF', 'MECH_SF': 'MECH_SF',
-      'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MES': 'MES',
+      // Sandwich (23MS01, 23MSW01)
+      'MECHANICAL ENGINEERING (SANDWICH)': 'MES', 'MECHANICAL SANDWICH': 'MES', 'MECHANICAL SANDWICH (SF)': 'MES', 'MS': 'MES', 'MSW': 'MES', 'MES': 'MES',
+      // Automobile
       'AUTOMOBILE ENGINEERING': 'AUTO_AIDED', 'AE': 'AUTO_AIDED', 'AUTO_AIDED': 'AUTO_AIDED', 'AUTO_SF': 'AUTO_SF',
-      'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'R&AC': 'RAC',
-      'MECHATRONICS': 'MC', 'MCS': 'MC',
+      // R&AC
+      'MECHANICAL ENGINEERING (R & AC)': 'RAC', 'REFRIGERATION AND AIR CONDITIONING': 'RAC', 'R&AC': 'RAC', 'RAC': 'RAC',
+      // Mechatronics (23MCS01, 23MSC01)
+      'MECHATRONICS': 'MC', 'MCS': 'MC', 'MSC': 'MC', 'MC(SF)': 'MC', 'MECHATRONICS(SF)': 'MC',
+      // ECE
       'ELECTRONICS AND COMMUNICATION': 'ECE_AIDED', 'ECE': 'ECE_AIDED', 'ECE_AIDED': 'ECE_AIDED', 'ECE_SF': 'ECE_SF',
+      // EEE
       'ELECTRICAL AND ELECTRONICS': 'EEE_AIDED', 'EEE': 'EEE_AIDED', 'EEE_AIDED': 'EEE_AIDED', 'EEE_SF': 'EEE_SF',
-      'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT',
-      'PRINTING TECHNOLOGY': 'PT', 'PRINTING': 'PT',
+      // Others
+      'COMPUTER TECHNOLOGY': 'CT', 'COMPUTER ENGINEERING': 'CT', 'CT': 'CT',
+      'TEXTILE TECHNOLOGY': 'TT', 'TEXTILE': 'TT', 'TT': 'TT',
+      'PRINTING TECHNOLOGY': 'PT', 'PRINTING': 'PT', 'PT': 'PT',
+      'COMMUNICATION AND COMPUTER NETWORKING': 'CCN', 'CCN': 'CCN',
     };
 
-    return quickMap[d] || d;
+    return map[d] || d;
   };
 
   // Rule of Hooks: All hooks and logic must come before early returns
