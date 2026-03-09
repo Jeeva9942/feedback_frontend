@@ -146,8 +146,8 @@ export default function FeedbackForm({ rollNo, studentName, department, onSubmit
               <table className="w-full border-collapse border text-sm">
                 <thead>
                   <tr className="bg-primary text-primary-foreground">
-                    <th className="border p-3 text-left">S.No</th>
-                    <th className="border p-3 text-left">Criteria</th>
+                    <th className="border p-3 text-left w-12 sm:w-auto">S.No</th>
+                    <th className="border p-3 text-left min-w-[200px]">Criteria</th>
                     {RATING_LABELS.slice().reverse().map(l => (
                       <th key={l} className="border p-3 text-center whitespace-nowrap">{l}</th>
                     ))}
@@ -185,8 +185,8 @@ export default function FeedbackForm({ rollNo, studentName, department, onSubmit
               <table className="w-full border-collapse border text-sm">
                 <thead>
                   <tr className="bg-primary text-primary-foreground">
-                    <th className="border p-3 text-left">S.No</th>
-                    <th className="border p-3 text-left">Question</th>
+                    <th className="border p-3 text-left w-12 sm:w-auto">S.No</th>
+                    <th className="border p-3 text-left min-w-[200px]">Question</th>
                     {RATING_LABELS.slice().reverse().map(l => (
                       <th key={l} className="border p-3 text-center whitespace-nowrap">{l}</th>
                     ))}
@@ -224,8 +224,8 @@ export default function FeedbackForm({ rollNo, studentName, department, onSubmit
               <table className="w-full border-collapse border text-sm">
                 <thead>
                   <tr className="bg-primary text-primary-foreground">
-                    <th className="border p-3 text-left w-12">S.No</th>
-                    <th className="border p-3 text-left">Criteria</th>
+                    <th className="border p-3 text-left w-12 sm:w-auto">S.No</th>
+                    <th className="border p-3 text-left min-w-[200px]">Criteria</th>
                     {RATING_LABELS.slice().reverse().map(l => (
                       <th key={l} className="border p-3 text-center whitespace-nowrap">{l}</th>
                     ))}

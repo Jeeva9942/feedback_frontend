@@ -18,6 +18,7 @@ export default function AdminDashboard() {
   const [showPrint, setShowPrint] = useState(false);
   const [printDept, setPrintDept] = useState<Department>('CE');
   const [searchRoll, setSearchRoll] = useState('');
+  const [submissionFilter, setSubmissionFilter] = useState<'ALL' | 'SUBMITTED' | 'PENDING'>('ALL');
   const printRef = useRef<HTMLDivElement>(null);
 
   const [analytics, setAnalytics] = useState<any>({
@@ -184,7 +185,12 @@ export default function AdminDashboard() {
     const matchSearch = !searchRoll ||
       sRoll.toLowerCase().includes(searchRoll.toLowerCase()) ||
       sName.toLowerCase().includes(searchRoll.toLowerCase());
-    return matchDept && matchSearch;
+
+    let matchStatus = true;
+    if (submissionFilter === 'SUBMITTED') matchStatus = s.hasSubmitted;
+    if (submissionFilter === 'PENDING') matchStatus = !s.hasSubmitted;
+
+    return matchDept && matchSearch && matchStatus;
   });
 
   const deptChartData = (analytics.deptStats || []).map((d: any) => ({
@@ -370,12 +376,12 @@ export default function AdminDashboard() {
         </div>
 
         {/* Actions Row */}
-        <div className="flex flex-wrap items-center gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4 mb-6">
           {/* Department Filter */}
           <select
             value={selectedDept}
             onChange={e => setSelectedDept(e.target.value as Department | 'ALL')}
-            className="px-4 py-2.5 rounded-lg border bg-card text-foreground text-sm"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-lg border bg-card text-foreground text-sm"
           >
             <option value="ALL">All Departments</option>
             {DEPARTMENTS.map(d => (
@@ -384,7 +390,7 @@ export default function AdminDashboard() {
           </select>
 
           {/* Search */}
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <div className="relative flex-1 w-full sm:w-auto min-w-[200px] max-w-sm sm:max-w-none">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
@@ -396,23 +402,36 @@ export default function AdminDashboard() {
           </div>
 
           {/* Upload Excel */}
-          <label className="flex items-center gap-2 px-4 py-2.5 rounded-lg border bg-card text-foreground text-sm cursor-pointer hover:bg-muted transition-colors">
+          <label className="w-full sm:w-auto justify-center flex items-center gap-2 px-4 py-2.5 rounded-lg border bg-card text-foreground text-sm cursor-pointer hover:bg-muted transition-colors">
             <Upload size={16} />
             Upload Excel
             <input type="file" accept=".xlsx,.xls" onChange={handleExcelUpload} className="hidden" />
           </label>
 
+          {/* Submission Filter */}
+          <select
+            value={submissionFilter}
+            onChange={e => setSubmissionFilter(e.target.value as 'ALL' | 'SUBMITTED' | 'PENDING')}
+            className="w-full sm:w-auto px-4 py-2.5 rounded-lg border bg-card text-foreground text-sm"
+          >
+            <option value="ALL">All Status</option>
+            <option value="SUBMITTED">Submitted</option>
+            <option value="PENDING">Pending (Not Submitted)</option>
+          </select>
+
           {/* Print Reports */}
-          {DEPARTMENTS.map(d => (
-            <button
-              key={d}
-              onClick={() => handlePrint(d)}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-            >
-              <Printer size={14} />
-              {d}
-            </button>
-          ))}
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            {DEPARTMENTS.map(d => (
+              <button
+                key={d}
+                onClick={() => handlePrint(d)}
+                className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+              >
+                <Printer size={14} />
+                {d}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Students Table */}

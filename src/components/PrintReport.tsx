@@ -21,10 +21,13 @@ export default function PrintReport({ department, feedback = [], totalStudents }
     return feedback.find(f => (f.question_code || '').toUpperCase() === code) || null;
   };
 
-  // Total students: use prop from DB, else fallback to max total_count in feedback
-  const displayTotal = totalStudents !== undefined
+  // Default max total_count in feedback
+  const maxFeedbackCount = feedback.length > 0 ? Math.max(...feedback.map(f => f.total_count || 0)) : 0;
+
+  // Total students: use prop from DB, but ensure it's not less than the actual submitted count
+  const displayTotal = totalStudents !== undefined && totalStudents >= maxFeedbackCount
     ? totalStudents
-    : (feedback.length > 0 ? Math.max(...feedback.map(f => f.total_count || 0)) : 0);
+    : maxFeedbackCount;
 
   // Department-specific PSO text
   const pso = getDeptPSO(department);

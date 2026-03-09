@@ -35,8 +35,8 @@ const DEPT_TABLE_MAP = {
  * e.g. DB stores 'R&AC' but frontend expects 'RAC'
  */
 function normalizeDept(dept) {
-  const d = (dept || '').trim();
-  if (d === 'R&AC') return 'RAC';
+  const d = (dept || '').trim().toUpperCase();
+  if (d === 'R&AC' || d === 'R & AC' || d === 'RAC' || d === 'REFRIGERATION AND AIR CONDITIONING') return 'RAC';
   return d;
 }
 

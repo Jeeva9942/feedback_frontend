@@ -46,9 +46,9 @@ export default function Header() {
         animate={{ y: 0, opacity: 1 }}
         className="bg-card border-b border-border shadow-sm pb-2 sm:pb-0"
       >
-        <div className="max-w-7xl mx-auto px-4 py-3 sm:py-2 md:py-1 flex items-start sm:items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-3 sm:py-2 md:py-1 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-3 sm:gap-0">
 
-          <div className="flex flex-row items-center gap-4 sm:gap-4 md:gap-5 w-full sm:w-auto">
+          <div className="flex flex-row items-center justify-center sm:justify-start gap-3 sm:gap-4 md:gap-5 w-full sm:w-auto text-center sm:text-left">
             <img
               src={nptcLogo}
               alt="Nachimuthu Polytechnic College Logo"
@@ -86,7 +86,7 @@ export default function Header() {
           {showUser && (
             <button
               onClick={logout}
-              className="flex items-center gap-1.5 px-3 py-2.5 rounded-lg border border-border hover:bg-muted text-foreground text-xs sm:text-sm transition-all shadow-sm active:scale-95 flex-shrink-0"
+              className="flex w-full sm:w-auto justify-center items-center gap-1.5 px-3 py-2.5 rounded-lg border border-border hover:bg-muted text-foreground text-xs sm:text-sm transition-all shadow-sm active:scale-95 flex-shrink-0 mt-2 sm:mt-0"
             >
               <LogOut size={14} className="sm:w-4 sm:h-4" />
               <span className="hidden sm:inline font-medium">Logout</span>
