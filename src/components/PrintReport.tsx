@@ -45,19 +45,19 @@ export default function PrintReport({ department, feedback = [], totalStudents }
         <img src={logo} alt="NPTC Logo" className="w-28 h-28 object-contain" />
 
         <div className="text-center flex-1 px-4">
-          <h1 className="text-xl font-bold uppercase leading-tight">
+          <h1 className="text-[22px] font-bold uppercase leading-tight tracking-wide">
             Nachimuthu Polytechnic College
           </h1>
-          <p className="text-[11px] font-bold uppercase mt-0.5">
+          <p className="text-[11px] font-bold uppercase mt-1 whitespace-nowrap">
             Government Aided Autonomous Institute Approved by AICTE, New Delhi
           </p>
-          <p className="text-[11px] font-bold uppercase">
+          <p className="text-[11px] font-bold uppercase whitespace-nowrap mt-0.5">
             Affiliated to State Board of Technical Education &amp; Training Tamil Nadu
           </p>
-          <p className="text-[9px] font-bold mt-0.5">
+          <p className="text-[10px] font-bold mt-1 leading-tight tracking-tight">
             Accredited by APACC (Asia Pacific Accreditation And Certification Commission), Philippines with Gold Level
           </p>
-          <h2 className="text-xl font-bold mt-1 tracking-[0.2em]">EXIT SURVEY</h2>
+          <h2 className="text-xl font-bold mt-2 tracking-[0.2em]">EXIT SURVEY</h2>
         </div>
 
         <img src={tower} alt="NPTC Tower" className="w-28 h-28 object-contain" />
