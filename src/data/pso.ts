@@ -28,10 +28,6 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso1: 'Develop Mechatronics systems and components as per the national and international standards, Process and system.',
         pso2: 'Solve industry problems using appropriate modern tools, techniques and devices to provide solutions.',
     },
-    MES: {
-        pso1: 'Design and develop mechanical products through experiential industrial learning.',
-        pso2: 'Apply technical skills gained through industry exposure to solve engineering problems.',
-    },
     AE: {
         pso1: 'Apply the core knowledge and technological advances in automotive industries.',
         pso2: 'Demonstrate proficiency in the use of automobile shop tools and equipment to diagnose and repair vehicle systems.',
@@ -80,6 +76,14 @@ export const DEPARTMENT_PSO: Record<string, PSO> = {
         pso2: 'Apply acquired computing skills for societal and industrial benefits.',
     },
     TT: {
+        pso1: 'Manage various sections of textile mills using discipline knowledge.',
+        pso2: 'Apply technical and professional skills for sustainable growth and societal development.',
+    },
+    TTA: {
+        pso1: 'Manage various sections of textile mills using discipline knowledge.',
+        pso2: 'Apply technical and professional skills for sustainable growth and societal development.',
+    },
+    TEXTAIL: {
         pso1: 'Manage various sections of textile mills using discipline knowledge.',
         pso2: 'Apply technical and professional skills for sustainable growth and societal development.',
     },

@@ -37,7 +37,7 @@ export interface User {
 
 // ── 📌 Core Departments ────────────────────────────────────────────────────
 // CE → ce_feedback        ME → mech_aided_feedback   MECH_AIDED → mech_aided_feedback
-// MECH_SF → mechanical_sf_feedback  MES → mes_feedback   AE → ae_feedback
+// MECH_SF → mechanical_sf_feedback  AE → ae_feedback
 // RAC → rac_feedback      MC → mcs_feedback
 // ── ⚡ Circuit Departments ──────────────────────────────────────────────────
 // ECE → ece_feedback  EEE → eee_feedback
@@ -49,7 +49,6 @@ export type Department =
   | 'MECH_AIDED'  // Mechanical Engineering (Aided)
   | 'MECH_SF'     // Mechanical Engineering (SF)
   | 'MC'          // Mechatronics (SF)
-  | 'MES'         // Mechanical Sandwich (SF)
   | 'EEE_AIDED'   // Electrical and Electronics Engineering (Aided)
   | 'EEE_SF'      // Electrical and Electronics Engineering (SF)
   | 'ECE_AIDED'   // Electronics and Communication Engineering (Aided)
@@ -67,7 +66,7 @@ export type Department =
   | 'EEE';        // Alias
 
 export const DEPARTMENTS: Department[] = [
-  'MECH_AIDED', 'MECH_SF', 'MC', 'MES',
+  'MECH_AIDED', 'MECH_SF', 'MC',
   'EEE_AIDED', 'EEE_SF', 'ECE_AIDED', 'ECE_SF',
   'AUTO_AIDED', 'AUTO_SF', 'RAC',
   'CE', 'TT', 'CT', 'CCN', 'PT'
@@ -78,7 +77,6 @@ export const DEPARTMENT_NAMES: Record<Department, string> = {
   MECH_AIDED: 'Mechanical Engineering (Aided)',
   MECH_SF: 'Mechanical Engineering (SF)',
   MC: 'Mechatronics (SF)',
-  MES: 'Mechanical Sandwich (SF)',
   EEE_AIDED: 'Electrical and Electronics Engineering (Aided)',
   EEE_SF: 'Electrical and Electronics Engineering (SF)',
   ECE_AIDED: 'Electronics and Communication Engineering (Aided)',
